@@ -31,5 +31,18 @@ app.get("/transaction/categories", (req, res) => {
   });
 });
 
+app.get("/user/:id", (req, res) => {
+  const query = "SELECT * FROM user WHERE id = ?";
+  db.query(query, req.params.id, (error, results, fields) => {
+    if (error) throw error;
+
+    res.json(results);
+  });
+});
+
+app.post("/transactions", (req, res) => {
+  console.log(req.params);
+});
+
 const PORT = 8001;
 app.listen(PORT, console.log("Listening to PORT", PORT));

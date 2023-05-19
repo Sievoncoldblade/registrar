@@ -5,7 +5,8 @@ import Search from "./Search";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const [isServiceDropDownOpen, setIsServiceDropDownOpen] = useState(false);
+  const [isProfileDropDownOpen, setIsProfileDropDownOpen] = useState(false);
   const services = ["Registrar Services", "Administrative Services", "Accounting Services", "Academic Office Services"];
   const [serviceSelected, setServiceSelected] = useState(() => services[0]);
   return (
@@ -18,18 +19,18 @@ const Navbar = () => {
           </Link>
         </div>
         <div className='relative px-10'>
-          <button className='flex px-4 justify-start gap-2 text-white' onClick={() => setIsDropDownOpen(!isDropDownOpen)}>
+          <button className='flex px-4 justify-start gap-2 text-white' onClick={() => setIsServiceDropDownOpen(!isServiceDropDownOpen)}>
             {serviceSelected}
-            <span>{isDropDownOpen ? <BiUpArrow size={"15"} className='inline' /> : <BiDownArrow size={"15"} className='inline' />}</span>
+            <span>{isServiceDropDownOpen ? <BiUpArrow size={"15"} className='inline' /> : <BiDownArrow size={"15"} className='inline' />}</span>
           </button>
-          {isDropDownOpen && (
+          {isServiceDropDownOpen && (
             <ul className='absolute top-8 bg-white border border-red-700 rounded-lg overflow-hidden'>
               {services.map((e, i) => (
                 <li
                   className='px-4 py-2 last:border-none border-b border-b-red-700 text-red-700 font-medium'
                   key={i}
                   onClick={() => {
-                    setIsDropDownOpen(false);
+                    setIsServiceDropDownOpen(false);
                     setServiceSelected(services[i]);
                   }}
                 >
@@ -41,9 +42,29 @@ const Navbar = () => {
         </div>
         <Search />
         {/* Only display if user is logged in */}
-        <div className='flex flex-row gap-2 items-center space-x-1 text-md font-medium text-white'>
+        <div className='relative flex flex-row gap-2 items-center space-x-1 text-md font-medium text-white' onClick={() => setIsProfileDropDownOpen(!isProfileDropDownOpen)}>
           <BiUser className='inline' size='30' />
           <span>Juan dela Cruz</span>
+          {isProfileDropDownOpen && (
+            <ul className='absolute flex flex-col w-full top-8 bg-white border border-red-700 rounded-lg overflow-hidden'>
+              <Link
+                className='px-4 py-2 last:border-none border-b border-b-red-700 text-red-700 font-medium'
+                onClick={() => {
+                  setIsProfileDropDownOpen(false);
+                }}
+              >
+                Account Settings
+              </Link>
+              <Link
+                className='px-4 py-2 last:border-none border-b border-b-red-700 text-red-700 font-medium'
+                onClick={() => {
+                  setIsProfileDropDownOpen(false);
+                }}
+              >
+                Logout
+              </Link>
+            </ul>
+          )}
         </div>
       </nav>
     </>
