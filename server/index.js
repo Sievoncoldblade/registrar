@@ -45,9 +45,9 @@ app.get("/user/:id", (req, res) => {
 });
 
 app.post("/transactions", (req, res) => {
-  const { user_id, schedule, category_id } = req.body;
-  const query = "INSERT INTO transaction (user_id, schedule, category_id) VALUES (?, ?, ?)";
-  db.query(query, [user_id, schedule, category_id], (error, results) => {
+  const { user_id, schedule, category_id, status_id } = req.body;
+  const query = "INSERT INTO transaction (user_id, schedule, category_id, status_id) VALUES (?, ?, ?, ?)";
+  db.query(query, [user_id, schedule, category_id, status_id], (error, results) => {
     if (error) {
       console.error("Error inserting data:", error);
       res.status(500).json({ error: "Error inserting data" });

@@ -43,7 +43,7 @@ const Request = ({ userData }) => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     console.log("submitted");
-    const data = { user_id: userData.id, schedule: schedule, category_id: selectedTransaction };
+    const data = { user_id: userData.id, schedule: schedule, category_id: selectedTransaction, status_id: 1 };
     const res = await axios.post(`${SERVER_URL}/transactions`, data);
     console.log(res);
   };
