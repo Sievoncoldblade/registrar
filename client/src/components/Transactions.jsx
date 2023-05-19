@@ -40,10 +40,16 @@ const Transactions = ({ userData }) => {
     setFilteredData(newData);
   };
 
+  const formatDate = (datetimeString) => {
+    const dateObj = new Date(datetimeString);
+    const formattedDate = `${dateObj.getFullYear()}-${dateObj.getMonth() + 1}-${dateObj.getDate()}`;
+    return formattedDate;
+  };
+
   const columns = [
     { name: "Request Code", selector: (row) => row.id, sortable: true },
     { name: "Request", selector: (row) => row.name, sortable: true },
-    { name: "Schedule", selector: (row) => row.schedule, sortable: true },
+    { name: "Schedule", selector: (row) => row.schedule, sortable: true, format: (row) => formatDate(row.schedule) },
     { name: "Status", selector: (row) => row.type, sortable: true },
   ];
 
@@ -55,14 +61,14 @@ const Transactions = ({ userData }) => {
         </div>
         <div>
           <div>
-            <div>
+            <div className='flex flex-row justify-end gap-4 mr-4'>
               <select onChange={handleOnChange}>
                 <option value='Name'>Name</option>
                 <option value='Schedule'>Schedule</option>
                 <option value='Type'>Status</option>
               </select>
+              <input className='px-4 py-2' type='text' name='search' id='search' placeholder={`Search by ${filter}`} onChange={(e) => handleFilter(e, filter)} />
             </div>
-            <input type='text' name='search' id='search' placeholder={`Search by ${filter}`} onChange={(e) => handleFilter(e, filter)} />
           </div>
           <div>{loading ? <p>Loading...</p> : <DataTable columns={columns} data={filteredData} pagination fixedHeader></DataTable>}</div>
         </div>
