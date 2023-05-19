@@ -2,17 +2,19 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+const SERVER_URL = "http://localhost:8001";
+
 const Request = () => {
   const [transactionCategories, setTransactionCategories] = useState([]);
-  const [formData, updateFormData] = useState({});
-  const [selectedTransaction, setSelectedTransaction] = useState(() => 0);
+  // const [formData, updateFormData] = useState({});
+  const [selectedTransaction, setSelectedTransaction] = useState(() => 1);
   const [schedule, setSchedule] = useState("");
   const [userData, setUserData] = useState();
 
   useEffect(() => {
     const fetchAllTransactionCategories = async () => {
       try {
-        const res = await axios.get("http://localhost:8001/transaction/categories");
+        const res = await axios.get(`${SERVER_URL}/transaction/categories`);
         return res;
       } catch (err) {
         console.error(err);
@@ -21,7 +23,7 @@ const Request = () => {
 
     const fetchUserData = async (id = 1) => {
       try {
-        const res = await axios.get(`http://localhost:8001/user/${id}`);
+        const res = await axios.get(`${SERVER_URL}/user/${id}`);
         return res;
       } catch (err) {
         console.error(err);
@@ -52,6 +54,7 @@ const Request = () => {
   }, []);
 
   const handleTransactionOnChange = (e) => {
+    console.log(e.target.value);
     setSelectedTransaction(e.target.value);
   };
   const handleCalendarOnChange = (e) => {
@@ -59,9 +62,11 @@ const Request = () => {
   };
 
   const handleFormSubmit = async (e) => {
-    const res = await axios.post("http://localhost:8001/transactions", { category_id: selectedTransaction, user_id: userData.id, schedule: schedule });
-    console.log(res);
     e.preventDefault();
+    console.log("submitted");
+    const data = { user_id: userData.id, schedule: schedule, category_id: selectedTransaction };
+    const res = await axios.post(`${SERVER_URL}/transactions`, data);
+    console.log(res);
   };
 
   const { last_name, first_name, middle_name, extension_name, contact_number, email_address } = userData || {};
@@ -69,9 +74,9 @@ const Request = () => {
     <>
       <div className='h-[85%] w-full'>
         <div className='text-slate-900 flex justify-center'>
-          <h1 className='font-semibold text-2xl'>Create Request</h1>
+          <h1 className='font-semibold text-2xl p-4'>Create Request</h1>
         </div>
-        <div className='flex justify-around  h-full gap-2'>
+        <div className='flex justify-around mx-4 h-full gap-2'>
           <div className='flex flex-col w-1/4 justify-between border border-gray-300'>
             <div>
               <div>
@@ -85,26 +90,29 @@ const Request = () => {
                 </p>
               </div>
             </div>
-            <div className='flex flex-col gap-2 px-4 py-2'>
-              <button className='text-red-800 py-1 border-2 border-red-800 rounded-md hover:bg-red-100 focus:bg-red-300'>My transactions</button>
-              <button className='text-red-800 py-1 border-2 border-red-800 rounded-md hover:bg-red-100 focus:bg-red-300'>Generate Inquiry</button>
+            <div className='flex flex-col gap-2 px-4 py-2 text-center'>
+              <Link to='/transactions' className='text-red-800 py-1 border-2 border-red-800 rounded-md hover:bg-red-100 focus:bg-red-300 '>
+                My transactions
+              </Link>
               <button className='text-red-800 py-1 border-2 border-red-800 rounded-md hover:bg-red-100 focus:bg-red-300'>Reset Form</button>
-              <button className='text-red-800 py-1 border-2 border-red-800 rounded-md hover:bg-red-100 focus:bg-red-300'>Help</button>
+              <Link to='/help' className='text-red-800 py-1 border-2 border-red-800 rounded-md hover:bg-red-100 focus:bg-red-300'>
+                Help
+              </Link>
             </div>
           </div>
-          <div className='flex flex-col w-3/4'>
+          <div className='flex flex-col w-3/4 border border-gray-300'>
             <p className='bg-gray-200 py-2 px-4 font-semibold border-b border-gray-300'>Request Form</p>
             <div className='flex flex-col gap-4 px-4 py-2'>
               <form onSubmit={handleFormSubmit}>
                 <p className='text-sm'>
                   Fields highlighted in <span className='text-red-600'>*</span> are required
                 </p>
-                <p className='font-semibold'>Student Information</p>
+                <p className='font-semibold mt-4'>Student Information</p>
                 <div className='flex flex-col gap-2'>
-                  <label className='text-sm' htmlFor='student_number'>
+                  {/* <label className='text-sm' htmlFor='student_number'>
                     Student Number <span className='text-red-600'>*</span>
                   </label>
-                  <input className='w-80 px-4 py-2 border border-gray-300 rounded-md disabled:text-gray-400' type='text' name='student_number' id='student_number' />
+                  <input className='w-80 px-4 py-2 border border-gray-300 rounded-md disabled:text-gray-400' type='text' name='student_number' id='student_number' /> */}
                   <label className='text-sm' htmlFor='last_name'>
                     Last Name <span className='text-red-600'>*</span>
                   </label>
@@ -224,7 +232,7 @@ const Request = () => {
                     </p>
                   </div>
                 </div>
-                <div className='flex gap-4'>
+                <div className='flex my-2 gap-4'>
                   <Link to='../'>
                     <button className='bg-red-800 text-white rounded-md px-4 py-2'>Back</button>
                   </Link>

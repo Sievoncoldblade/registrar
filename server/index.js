@@ -1,5 +1,6 @@
-import express from "express";
+import express, { query } from "express";
 import mysql from "mysql";
+import bodyParser from "body-parser";
 
 const app = express();
 const db = mysql.createPool({
@@ -17,6 +18,9 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 app.get("/", (req, res) => {
   res.json({ lol: "happy" });
 });
@@ -24,7 +28,7 @@ app.get("/", (req, res) => {
 app.get("/transaction/categories", (req, res) => {
   const query = "SELECT * FROM transaction_category";
 
-  db.query(query, (error, results, fields) => {
+  db.query(query, (error, results) => {
     if (error) throw error;
 
     res.json(results);
@@ -33,7 +37,7 @@ app.get("/transaction/categories", (req, res) => {
 
 app.get("/user/:id", (req, res) => {
   const query = "SELECT * FROM user WHERE id = ?";
-  db.query(query, req.params.id, (error, results, fields) => {
+  db.query(query, req.params.id, (error, results) => {
     if (error) throw error;
 
     res.json(results);
@@ -41,7 +45,17 @@ app.get("/user/:id", (req, res) => {
 });
 
 app.post("/transactions", (req, res) => {
-  console.log(req.params);
+  const { user_id, schedule, category_id } = req.body;
+  console.log(req.body);
+  const query = "INSERT INTO transaction (user_id, schedule, category_id) VALUES (?, ?, ?)";
+  db.query(query, [user_id, schedule, category_id], (error, results) => {
+    if (error) {
+      console.error("Error inserting data:", error);
+      res.status(500).json({ error: "Error inserting data" });
+    }
+
+    res.status(200).json({ message: "data inserted successfuly" });
+  });
 });
 
 const PORT = 8001;
