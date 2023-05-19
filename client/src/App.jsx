@@ -36,12 +36,15 @@ const App = () => {
 
   return (
     <>
-      <div className='h-screen'>
+      <div className=''>
         <Navbar />
         <Routes>
           <Route path='/' element={<Menu />} />
           <Route path='/request' element={<Request userData={userData} />} />
-          <Route path='/transactions' element={<Transactions userData={userData} />} />
+          <Route
+            path='/transactions'
+            element={<Transactions userData={userData} />}
+          />
         </Routes>
       </div>
     </>
