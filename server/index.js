@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
   res.json({ lol: "happy" });
 });
 
-app.get("/transaction/categories", (req, res) => {
+app.get("/transactions/categories", (req, res) => {
   const query = "SELECT * FROM transaction_category";
 
   db.query(query, (error, results) => {
@@ -46,7 +46,6 @@ app.get("/user/:id", (req, res) => {
 
 app.post("/transactions", (req, res) => {
   const { user_id, schedule, category_id } = req.body;
-  console.log(req.body);
   const query = "INSERT INTO transaction (user_id, schedule, category_id) VALUES (?, ?, ?)";
   db.query(query, [user_id, schedule, category_id], (error, results) => {
     if (error) {
@@ -55,6 +54,20 @@ app.post("/transactions", (req, res) => {
     }
 
     res.status(200).json({ message: "data inserted successfuly" });
+  });
+});
+
+app.get("/transactions/:id", (req, res) => {
+  const { id } = req.params;
+
+  const query =
+    "SELECT transaction.id, transaction.schedule, transaction_category.name, status.type FROM user LEFT JOIN transaction ON transaction.user_id = user.id LEFT JOIN transaction_category ON transaction_category.id = transaction.category_id LEFT JOIN status ON transaction.status_id = status.id WHERE user.id = ?";
+
+  db.query(query, [id], (error, results) => {
+    if (error) {
+      console.log("No data found", error);
+    }
+    res.json(results);
   });
 });
 

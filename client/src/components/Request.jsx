@@ -4,39 +4,19 @@ import axios from "axios";
 
 const SERVER_URL = "http://localhost:8001";
 
-const Request = () => {
+const Request = ({ userData }) => {
   const [transactionCategories, setTransactionCategories] = useState([]);
   // const [formData, updateFormData] = useState({});
   const [selectedTransaction, setSelectedTransaction] = useState(() => 1);
   const [schedule, setSchedule] = useState("");
-  const [userData, setUserData] = useState();
 
   useEffect(() => {
     const fetchAllTransactionCategories = async () => {
       try {
-        const res = await axios.get(`${SERVER_URL}/transaction/categories`);
+        const res = await axios.get(`${SERVER_URL}/transactions/categories`);
         return res;
       } catch (err) {
         console.error(err);
-      }
-    };
-
-    const fetchUserData = async (id = 1) => {
-      try {
-        const res = await axios.get(`${SERVER_URL}/user/${id}`);
-        return res;
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    const getUserData = async () => {
-      try {
-        const { data } = await fetchUserData(1);
-        const toSend = data[0];
-        setUserData(toSend);
-      } catch (err) {
-        console.error("no user found", err);
       }
     };
 
@@ -48,7 +28,6 @@ const Request = () => {
         console.error("no categories found", err);
       }
     };
-    getUserData();
 
     getAllTransactionCategories();
   }, []);
