@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const SERVER_URL = "http://localhost:8001";
 
 const Request = ({ userData }) => {
@@ -40,6 +43,8 @@ const Request = ({ userData }) => {
     setSchedule(e.target.value);
   };
 
+  const notify = () => toast("Request sent successfully");
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     console.log("submitted");
@@ -49,8 +54,17 @@ const Request = ({ userData }) => {
       category_id: selectedTransaction,
       status_id: 1,
     };
-    const res = await axios.post(`${SERVER_URL}/transactions`, data);
-    console.log(res);
+    try {
+      const res = await axios.post(`${SERVER_URL}/transactions`, data);
+      notify();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onResetForm = () => {
+    setSchedule("");
+    setSelectedTransaction(1);
   };
 
   const {
@@ -98,7 +112,10 @@ const Request = ({ userData }) => {
               >
                 My transactions
               </Link>
-              <button className='text-red-800 py-1 border-2 border-red-800 rounded-md hover:bg-red-100 focus:bg-red-300'>
+              <button
+                onClick={onResetForm}
+                className='text-red-800 py-1 border-2 border-red-800 rounded-md hover:bg-red-100 focus:bg-red-300'
+              >
                 Reset Form
               </button>
               <Link
@@ -223,6 +240,7 @@ const Request = ({ userData }) => {
                       className='w-80 px-4 py-2 border border-gray-300 rounded-md disabled:text-gray-400 '
                       name='service_type'
                       id='service_type'
+                      value={selectedTransaction}
                     >
                       {transactionCategories.map((c) => {
                         return (
@@ -243,7 +261,9 @@ const Request = ({ userData }) => {
                       type='date'
                       name='schedule'
                       id='schedule'
+                      value={schedule}
                     />
+                    <ToastContainer />
                   </div>
                   <div className='bg-green-200 p-4 text-green-700 flex flex-col gap-2'>
                     <p className='text-lg font-semibold'>Reminder</p>

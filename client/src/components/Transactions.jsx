@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
+import { Link } from "react-router-dom";
 
 const SERVER_URL = "http://localhost:8001";
 
@@ -30,9 +31,30 @@ const Transactions = ({ userData }) => {
     setFilter(e.target.value);
   };
 
+  const displayMonth = (i) => {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    return months[i];
+  };
+
   const handleFilter = (e, filter) => {
     const newData = transactions.filter((row) => {
-      let a = row[filter.toLowerCase()].toLowerCase().includes(e.target.value.toLowerCase());
+      let a = row[filter.toLowerCase()]
+        .toLowerCase()
+        .includes(e.target.value.toLowerCase());
       console.log(a);
       return a;
     });
@@ -40,16 +62,14 @@ const Transactions = ({ userData }) => {
     setFilteredData(newData);
   };
 
-  const formatDate = (datetimeString) => {
-    const dateObj = new Date(datetimeString);
-    const formattedDate = `${dateObj.getFullYear()}-${dateObj.getMonth() + 1}-${dateObj.getDate()}`;
-    return formattedDate;
-  };
-
   const columns = [
     { name: "Request Code", selector: (row) => row.id, sortable: true },
     { name: "Request", selector: (row) => row.name, sortable: true },
-    { name: "Schedule", selector: (row) => row.schedule, sortable: true, format: (row) => formatDate(row.schedule) },
+    {
+      name: "Schedule",
+      selector: (row) => row.schedule,
+      sortable: true,
+    },
     { name: "Status", selector: (row) => row.type, sortable: true },
   ];
 
@@ -59,6 +79,7 @@ const Transactions = ({ userData }) => {
         <div className='text-center my-4'>
           <h1 className='text-3xl font-semibold'>Transaction History</h1>
         </div>
+
         <div>
           <div>
             <div className='flex flex-row justify-end gap-4 mr-4'>
@@ -67,10 +88,28 @@ const Transactions = ({ userData }) => {
                 <option value='Schedule'>Schedule</option>
                 <option value='Type'>Status</option>
               </select>
-              <input className='px-4 py-2' type='text' name='search' id='search' placeholder={`Search by ${filter}`} onChange={(e) => handleFilter(e, filter)} />
+              <input
+                className='px-4 py-2'
+                type='text'
+                name='search'
+                id='search'
+                placeholder={`Search by ${filter}`}
+                onChange={(e) => handleFilter(e, filter)}
+              />
             </div>
           </div>
-          <div>{loading ? <p>Loading...</p> : <DataTable columns={columns} data={filteredData} pagination fixedHeader></DataTable>}</div>
+          <div>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <DataTable
+                columns={columns}
+                data={filteredData}
+                pagination
+                fixedHeader
+              ></DataTable>
+            )}
+          </div>
         </div>
       </div>
     </>

@@ -7,7 +7,12 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   const [isServiceDropDownOpen, setIsServiceDropDownOpen] = useState(false);
   const [isProfileDropDownOpen, setIsProfileDropDownOpen] = useState(false);
-  const services = ["Registrar Services", "Administrative Services", "Accounting Services", "Academic Office Services"];
+  const services = [
+    "Registrar Services",
+    "Administrative Services",
+    "Accounting Services",
+    "Academic Office Services",
+  ];
   const [serviceSelected, setServiceSelected] = useState(() => services[0]);
   return (
     <>
@@ -19,9 +24,18 @@ const Navbar = () => {
           </Link>
         </div>
         <div className='relative px-10'>
-          <button className='flex px-4 justify-start gap-2 text-white' onClick={() => setIsServiceDropDownOpen(!isServiceDropDownOpen)}>
+          <button
+            className='flex px-4 justify-start gap-2 text-white'
+            onClick={() => setIsServiceDropDownOpen(!isServiceDropDownOpen)}
+          >
             {serviceSelected}
-            <span>{isServiceDropDownOpen ? <BiUpArrow size={"15"} className='inline' /> : <BiDownArrow size={"15"} className='inline' />}</span>
+            <span>
+              {isServiceDropDownOpen ? (
+                <BiUpArrow size={"15"} className='inline' />
+              ) : (
+                <BiDownArrow size={"15"} className='inline' />
+              )}
+            </span>
           </button>
           {isServiceDropDownOpen && (
             <ul className='absolute top-8 bg-white border border-red-700 rounded-lg overflow-hidden'>
@@ -40,9 +54,12 @@ const Navbar = () => {
             </ul>
           )}
         </div>
-        <Search />
+        {/* <Search /> */}
         {/* Only display if user is logged in */}
-        <div className='relative flex flex-row gap-2 items-center space-x-1 text-md font-medium text-white' onClick={() => setIsProfileDropDownOpen(!isProfileDropDownOpen)}>
+        <div
+          className='relative flex flex-row gap-2 items-center space-x-1 text-md font-medium text-white'
+          onClick={() => setIsProfileDropDownOpen(!isProfileDropDownOpen)}
+        >
           <BiUser className='inline' size='30' />
           <span>Juan dela Cruz</span>
           {isProfileDropDownOpen && (

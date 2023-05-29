@@ -66,7 +66,7 @@ app.get("/transactions/:id", (req, res) => {
   const { id } = req.params;
 
   const query =
-    "SELECT transaction.id, transaction.schedule, transaction_category.name, status.type FROM user LEFT JOIN transaction ON transaction.user_id = user.id LEFT JOIN transaction_category ON transaction_category.id = transaction.category_id LEFT JOIN status ON transaction.status_id = status.id WHERE user.id = ?";
+    "SELECT transaction.id, DATE_FORMAT(transaction.schedule, '%M %d, %Y') AS schedule, transaction_category.name, status.type FROM user LEFT JOIN transaction ON transaction.user_id = user.id LEFT JOIN transaction_category ON transaction_category.id = transaction.category_id LEFT JOIN status ON transaction.status_id = status.id WHERE user.id = ?";
 
   db.query(query, [id], (error, results) => {
     if (error) {
